@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bingo Night</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --felt:#163C2C;
+    --felt-dark:#0E2A1E;
+    --ivory:#F6EFE0;
+    --ivory-dim:#E9DFC6;
+    --line:#3A6B52;
+    --gold:#E3A324;
+    --gold-dark:#B87F12;
+    --coral:#E1563F;
+    --ink:#1C2B22;
+  }
+
+  *{box-sizing:border-box;}
+
+  body{
+    margin:0;
+    font-family:'Work Sans', sans-serif;
+    background:
+      radial-gradient(circle at 50% -10%, #1E4C38 0%, var(--felt) 55%, var(--felt-dark) 100%);
+    color:var(--ivory);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    padding:28px 16px 40px;
+  }
+
+  .wrap{
+    width:100%;
+    max-width:400px;
+  }
+
+  header{
+    text-align:center;
+    margin-bottom:20px;
+  }
+
+  h1{
+    font-family:'Fredoka', sans-serif;
+    font-weight:700;
+    font-size:2rem;
+    margin:0;
+    color:var(--ivory);
+    letter-spacing:0.5px;
+  }
+
+  header p{
+    margin:6px 0 0;
+    font-size:0.9rem;
+    color:var(--ivory-dim);
+    opacity:0.8;
+  }
+
+  .caller{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    justify-content:center;
+    margin-bottom:16px;
+  }
+
+  .ball{
+    width:92px;
+    height:92px;
+    border-radius:50%;
+    background:var(--ivory);
+    border:4px solid var(--coral);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Fredoka', sans-serif;
+    font-weight:700;
+    font-size:2rem;
+    color:var(--ink);
+    flex-shrink:0;
+    transition:transform 0.25s ease;
+  }
+
+  .ball.pop{ transform:scale(1.12); }
+
+  .caller-controls{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    flex:1;
+  }
+
+  button{
+    font-family:'Work Sans', sans-serif;
+    font-weight:600;
+    font-size:0.95rem;
+    border-radius:999px;
+    border:none;
+    padding:12px 18px;
+    cursor:pointer;
+    transition:transform 0.15s ease, opacity 0.15s ease;
+  }
+
+  button:active{ transform:scale(0.97); }
+  button:focus-visible{ outline:3px solid var(--gold); outline-offset:2px; }
+
+  .btn-call{
+    background:var(--coral);
+    color:var(--ivory);
+    box-shadow:0 4px 0 #A83B29;
+  }
+  .btn-call:disabled{ opacity:0.5; cursor:not-allowed; box-shadow:none; }
+
+  .btn-ghost{
+    background:transparent;
+    color:var(--ivory-dim);
+    border:2px solid var(--line);
+    padding:9px 14px;
+    font-size:0.85rem;
+  }
+
+  .footer-row{
+    display:flex;
+    gap:10px;
+    margin-top:16px;
+  }
+  .footer-row button{ flex:1; }
+
+  .history{
+    display:flex;
+    gap:8px;
+    overflow-x:auto;
+    padding:4px 2px 14px;
+    margin-bottom:6px;
+  }
+  .history::-webkit-scrollbar{ height:4px; }
+
+  .chip{
+    flex-shrink:0;
+    min-width:34px;
+    height:34px;
+    border-radius:50%;
+    background:var(--ivory-dim);
+    color:var(--ink);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:600;
+    font-size:0.85rem;
+  }
+  .chip.latest{
+    background:var(--gold);
+    color:var(--ink);
+  }
+
+  .card{
+    background:var(--ivory);
+    border-radius:18px;
+    padding:12px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.35);
+    position:relative;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(5, 1fr);
+    gap:7px;
+  }
+
+  .cell{
+    aspect-ratio:1;
+    border-radius:10px;
+    border:2px solid var(--line);
+    background:var(--ivory-dim);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Fredoka', sans-serif;
+    font-weight:600;
+    font-size:1.15rem;
+    color:var(--ink);
+    cursor:pointer;
+    position:relative;
+    user-select:none;
+    transition:transform 0.12s ease;
+  }
+  .cell:active{ transform:scale(0.94); }
+  .cell:focus-visible{ outline:3px solid var(--felt); outline-offset:2px; }
+
+  .cell.free{
+    background:var(--coral);
+    color:var(--ivory);
+    font-size:0.85rem;
+    letter-spacing:0.5px;
+    cursor:default;
+  }
+
+  .cell.marked:not(.free){
+    background:var(--gold);
+    color:var(--ink);
+  }
+
+  .cell.marked:not(.free)::after{
+    content:"";
+    position:absolute;
+    width:70%;
+    height:70%;
+    border-radius:50%;
+    background:rgba(28,43,34,0.18);
+  }
+
+  .win-banner{
+    position:absolute;
+    inset:0;
+    background:rgba(14,42,30,0.92);
+    border-radius:18px;
+    display:none;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    text-align:center;
+    padding:20px;
+  }
+  .win-banner.show{ display:flex; }
+
+  .win-banner h2{
+    font-family:'Fredoka', sans-serif;
+    font-size:2.2rem;
+    color:var(--gold);
+    margin:0;
+  }
+  .win-banner p{
+    color:var(--ivory-dim);
+    margin:0;
+    font-size:0.9rem;
+  }
+  .win-banner button{
+    margin-top:8px;
+    background:var(--gold);
+    color:var(--ink);
+  }
+
+  .sr-only{
+    position:absolute; width:1px; height:1px;
+    overflow:hidden; clip:rect(0 0 0 0);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition:none !important; animation:none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Bingo Night</h1>
+    <p>Take turns calling — mark what lands</p>
+  </header>
+
+  <div class="caller">
+    <div class="ball" id="ball">–</div>
+    <div class="caller-controls">
+      <button class="btn-call" id="callBtn">Call a number</button>
+      <span id="poolStatus" style="font-size:0.78rem; color:var(--ivory-dim); text-align:center;">50 numbers left</span>
+    </div>
+  </div>
+
+  <div class="history" id="history" aria-label="Called numbers"></div>
+
+  <div class="card">
+    <div class="grid" id="grid"></div>
+    <div class="win-banner" id="winBanner">
+      <h2>Bingo!</h2>
+      <p>Nice one — start a fresh round whenever you're ready.</p>
+      <button id="playAgainBtn">New card</button>
+    </div>
+  </div>
+
+  <div class="footer-row">
+    <button class="btn-ghost" id="newCardBtn">New card</button>
+    <button class="btn-ghost" id="resetBtn">Reset marks</button>
+  </div>
+
+  <div class="sr-only" aria-live="polite" id="liveRegion"></div>
+</div>
+
+<script>
+  const FREE_INDEX = 12;
+  let cardNumbers = [];
+  let marked = new Set();
+  let pool = [];
+  let history = [];
+
+  const gridEl = document.getElementById('grid');
+  const ballEl = document.getElementById('ball');
+  const callBtn = document.getElementById('callBtn');
+  const historyEl = document.getElementById('history');
+  const winBanner = document.getElementById('winBanner');
+  const poolStatus = document.getElementById('poolStatus');
+  const liveRegion = document.getElementById('liveRegion');
+
+  function shuffledRange(min, max){
+    const arr = [];
+    for(let i = min; i <= max; i++) arr.push(i);
+    for(let i = arr.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  function newCard(){
+    const picks = shuffledRange(1, 50).slice(0, 24);
+    cardNumbers = [];
+    let p = 0;
+    for(let i = 0; i < 25; i++){
+      cardNumbers.push(i === FREE_INDEX ? 'FREE' : picks[p++]);
+    }
+    marked = new Set([FREE_INDEX]);
+    pool = shuffledRange(1, 50);
+    history = [];
+    ballEl.textContent = '–';
+    ballEl.classList.remove('pop');
+    winBanner.classList.remove('show');
+    callBtn.disabled = false;
+    renderCard();
+    renderHistory();
+    updatePoolStatus();
+  }
+
+  function resetMarks(){
+    marked = new Set([FREE_INDEX]);
+    pool = shuffledRange(1, 50);
+    history = [];
+    ballEl.textContent = '–';
+    ballEl.classList.remove('pop');
+    winBanner.classList.remove('show');
+    callBtn.disabled = false;
+    renderCard();
+    renderHistory();
+    updatePoolStatus();
+  }
+
+  function renderCard(){
+    gridEl.innerHTML = '';
+    cardNumbers.forEach((val, idx) => {
+      const cell = document.createElement('div');
+      cell.className = 'cell';
+      cell.textContent = val;
+      cell.tabIndex = 0;
+      cell.setAttribute('role', 'button');
+      if(idx === FREE_INDEX){
+        cell.classList.add('free');
+        cell.textContent = 'FREE';
+      }
+      if(marked.has(idx)) cell.classList.add('marked');
+      cell.addEventListener('click', () => toggleMark(idx));
+      cell.addEventListener('keydown', (e) => {
+        if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggleMark(idx); }
+      });
+      gridEl.appendChild(cell);
+    });
+  }
+
+  function toggleMark(idx){
+    if(idx === FREE_INDEX) return;
+    if(marked.has(idx)) marked.delete(idx);
+    else marked.add(idx);
+    renderCard();
+    checkWin();
+  }
+
+  function renderHistory(){
+    historyEl.innerHTML = '';
+    history.slice().reverse().forEach((num, i) => {
+      const chip = document.createElement('div');
+      chip.className = 'chip' + (i === 0 ? ' latest' : '');
+      chip.textContent = num;
+      historyEl.appendChild(chip);
+    });
+  }
+
+  function updatePoolStatus(){
+    poolStatus.textContent = pool.length + ' numbers left';
+    if(pool.length === 0){
+      poolStatus.textContent = 'All numbers called';
+      callBtn.disabled = true;
+    }
+  }
+
+  function callNumber(){
+    if(pool.length === 0) return;
+    const idx = Math.floor(Math.random() * pool.length);
+    const num = pool.splice(idx, 1)[0];
+    history.push(num);
+    ballEl.textContent = num;
+    ballEl.classList.remove('pop');
+    void ballEl.offsetWidth;
+    ballEl.classList.add('pop');
+    liveRegion.textContent = 'Called ' + num;
+
+    const cardIdx = cardNumbers.indexOf(num);
+    if(cardIdx !== -1) marked.add(cardIdx);
+
+    renderCard();
+    renderHistory();
+    updatePoolStatus();
+    checkWin();
+  }
+
+  function checkWin(){
+    const lines = [
+      [0,1,2,3,4],[5,6,7,8,9],[10,11,12,13,14],[15,16,17,18,19],[20,21,22,23,24],
+      [0,5,10,15,20],[1,6,11,16,21],[2,7,12,17,22],[3,8,13,18,23],[4,9,14,19,24],
+      [0,6,12,18,24],[4,8,12,16,20]
+    ];
+    const won = lines.some(line => line.every(i => marked.has(i)));
+    if(won){
+      winBanner.classList.add('show');
+      liveRegion.textContent = 'Bingo!';
+    }
+  }
+
+  callBtn.addEventListener('click', callNumber);
+  document.getElementById('newCardBtn').addEventListener('click', newCard);
+  document.getElementById('resetBtn').addEventListener('click', resetMarks);
+  document.getElementById('playAgainBtn').addEventListener('click', newCard);
+
+  newCard();
+</script>
+</body>
+</html>
