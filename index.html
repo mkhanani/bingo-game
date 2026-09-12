@@ -168,6 +168,13 @@
   .sr-only{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
   .hidden{ display:none !important; }
   .error-text{ color:#FFB4A6; font-size:0.82rem; min-height:18px; margin-top:6px; }
+  .setup-notice{
+    background:#3A2A16; border:2px solid var(--gold); color:var(--ivory);
+    border-radius:12px; padding:14px; font-size:0.85rem; line-height:1.5;
+    margin-bottom:16px;
+  }
+  .setup-notice strong{ color:var(--gold); }
+  .setup-notice code{ background:rgba(0,0,0,0.25); padding:1px 5px; border-radius:4px; }
 
   @media (prefers-reduced-motion: reduce){ *{ transition:none !important; animation:none !important; } }
 </style>
@@ -180,6 +187,9 @@
       <h1>Bingo Night</h1>
       <p>Play together from two phones</p>
     </header>
+    <div class="setup-notice hidden" id="setupNotice">
+      <strong>One-time setup needed.</strong> This game needs a database to sync between phones. In your Vercel project: <strong>Storage → Marketplace Database Providers → Upstash for Redis</strong>, connect it to this project, then redeploy. Refresh this page once that's done.
+    </div>
     <div class="card-panel">
       <p>Your name</p>
       <input type="text" id="nameInput" placeholder="e.g. Mustafa" maxlength="20">
@@ -247,21 +257,75 @@
   const el = (id) => document.getElementById(id);
 
   // ---------- storage helpers ----------
+  // Two backends: window.storage (only exists inside a Claude.ai artifact)
+  // or, when running as a normal deployed site, our own /api/room endpoint
+  // backed by a Redis database. Same call sites work either way.
+  const hasArtifactStorage = () => typeof window.storage !== 'undefined' && window.storage;
+
+  let backendReady = true; // set to false if /api/room reports the database isn't connected yet
+
   async function getVal(key, shared, fallback){
     try{
-      const res = await window.storage.get(key, shared);
-      if(!res) return fallback;
-      return JSON.parse(res.value);
+      if(hasArtifactStorage()){
+        const res = await window.storage.get(key, shared);
+        if(!res) return fallback;
+        return JSON.parse(res.value);
+      }
+      const res = await fetch('/api/room?key=' + encodeURIComponent(key));
+      if(res.status === 501){ backendReady = false; showSetupNotice(); return fallback; }
+      if(!res.ok) return fallback;
+      const data = await res.json();
+      if(data.value === null || data.value === undefined) return fallback;
+      return JSON.parse(data.value);
     }catch(e){
       return fallback;
     }
   }
   async function setVal(key, shared, value){
     try{
-      await window.storage.set(key, JSON.stringify(value), shared);
+      if(hasArtifactStorage()){
+        await window.storage.set(key, JSON.stringify(value), shared);
+        return;
+      }
+      const res = await fetch('/api/room', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key, value: JSON.stringify(value) })
+      });
+      if(res.status === 501){ backendReady = false; showSetupNotice(); }
     }catch(e){
       console.error('storage write failed', key, e);
     }
+  }
+
+  async function getIdentity(){
+    if(hasArtifactStorage()) return getVal('identity', false, null);
+    try{
+      const raw = localStorage.getItem('bingo-identity');
+      return raw ? JSON.parse(raw) : null;
+    }catch(e){ return null; }
+  }
+  async function setIdentity(val){
+    if(hasArtifactStorage()) return setVal('identity', false, val);
+    try{
+      if(val === null) localStorage.removeItem('bingo-identity');
+      else localStorage.setItem('bingo-identity', JSON.stringify(val));
+    }catch(e){}
+  }
+
+  function showSetupNotice(){
+    const notice = el('setupNotice');
+    if(notice) notice.classList.remove('hidden');
+    el('joinBtn').disabled = true;
+    el('callBtn') && (el('callBtn').disabled = true);
+  }
+
+  async function checkBackendReady(){
+    if(hasArtifactStorage()) return true;
+    try{
+      const res = await fetch('/api/room?key=' + encodeURIComponent('room:_check:_check'));
+      return res.status !== 501;
+    }catch(e){ return true; } // network hiccup, don't block on it
   }
 
   function keyPlayers(){ return `room:${ROOM}:players`; }
@@ -307,13 +371,13 @@
     }
     NAME = name;
     ROOM = room;
-    await setVal('identity', false, { name: NAME, room: ROOM });
+    await setIdentity({ name: NAME, room: ROOM });
     await enterRoom();
   });
 
   el('leaveBtn').addEventListener('click', async () => {
     if(pollTimer) clearInterval(pollTimer);
-    await setVal('identity', false, null);
+    await setIdentity(null);
     el('gameScreen').classList.add('hidden');
     el('joinScreen').classList.remove('hidden');
     el('nameInput').value = '';
@@ -566,7 +630,12 @@
 
   // ---------- boot ----------
   (async function boot(){
-    const identity = await getVal('identity', false, null);
+    const ready = await checkBackendReady();
+    if(!ready){
+      showSetupNotice();
+      return;
+    }
+    const identity = await getIdentity();
     if(identity && identity.name && identity.room){
       NAME = identity.name;
       ROOM = identity.room;
