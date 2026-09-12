@@ -28,7 +28,12 @@ If this step hasn't been done yet, `index.html` will show a banner on load expla
 
 Each room's state (players, call history, pattern, each player's card and marks) lives under keys like `room:ABCD:calls`. Both phones poll every 1.5 seconds for state changes; the ball, called-numbers board, and pool count update from that.
 
-The auto-caller runs on a synced 30-second clock (the deadline itself — `nextCallAt` — is stored in the shared `calls` value, not computed locally, so both phones count down from the same moment). When the clock hits zero, whichever phone's timer notices first tries to atomically claim a short-lived lock key (`SET ... NX EX`) before drawing the next number; the other phone's claim fails and it just picks up the result on its next poll. That's what prevents two numbers being called at once if both timers fire together.
+There are three ways to play, chosen on the first screen:
+- **Solo vs Computer** — fully local, no room code, no network calls at all. A bot opponent gets its own card and marks it with a short random delay and an ~88% catch rate per call, so it's beatable but not passive.
+- **Head to Head** — a room capped at 2 players.
+- **Party** — a room capped at 4 players.
+
+For Head to Head and Party, the auto-caller does not start until at least 2 players have joined (the caller panel shows "Waiting for another player…" until then). Once it starts, it runs on a synced 30-second clock — the deadline (`nextCallAt`) is stored in shared state, not computed locally, so every phone counts down from the same moment. When it hits zero, whichever phone's timer notices first tries to atomically claim a short-lived lock key (`SET ... NX EX`) before drawing the next number; everyone else just picks up the result on their next poll. That's what prevents two numbers being called at once if multiple timers fire together — the same lock mechanism also gates who's allowed to start the clock in the first place.
 
 Marking a number is entirely manual and only allowed once that number has actually been called — tapping an uncalled cell just shakes it. Win patterns (line, four corners, postage stamp, letter X, blackout) are chosen per round via the pattern row; starting a new round resets calls, marks, and the clock for everyone in the room.
 

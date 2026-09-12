@@ -38,29 +38,20 @@
   }
   .wrap{ width:100%; max-width:400px; position:relative; }
 
-  header{ text-align:center; margin-bottom:22px; }
+  header{ text-align:center; margin-bottom:20px; }
   h1{
     font-family:'Fraunces', serif;
     font-optical-sizing:auto;
     font-weight:700;
-    font-size:2.15rem;
+    font-size:2.05rem;
     letter-spacing:-0.01em;
     margin:0;
     color:var(--cream);
   }
-  .room-line{
-    margin:8px 0 0;
-    font-size:0.82rem;
-    color:var(--gold);
-    letter-spacing:0.06em;
-    font-weight:600;
-  }
-  .room-line span{ color:var(--muted); font-weight:500; }
-  header p{
-    margin:8px 0 0;
-    font-size:0.9rem;
-    color:var(--muted);
-  }
+  .room-line{ margin:8px 0 0; font-size:0.82rem; }
+  .room-line .room-label{ color:var(--muted); font-weight:500; }
+  #roomPill{ color:var(--gold); font-weight:700; letter-spacing:0.08em; }
+  header p{ margin:8px 0 0; font-size:0.9rem; color:var(--muted); }
 
   label{
     display:block;
@@ -124,6 +115,18 @@
     display:flex; align-items:center; justify-content:center;
   }
 
+  /* ---- mode picker ---- */
+  .mode-options{ display:flex; flex-direction:column; gap:10px; }
+  .mode-card{
+    display:flex; align-items:center; gap:14px; text-align:left; width:100%;
+    background:var(--panel); border:1px solid var(--hairline); border-radius:14px;
+    padding:16px;
+  }
+  .mode-emoji{ font-size:1.7rem; flex-shrink:0; }
+  .mode-text{ display:flex; flex-direction:column; gap:2px; }
+  .mode-title{ font-weight:700; font-size:0.98rem; color:var(--cream); }
+  .mode-sub{ font-size:0.78rem; color:var(--muted); }
+
   .card-panel{
     background:var(--panel);
     border:1px solid var(--hairline);
@@ -133,84 +136,38 @@
   }
   .card-panel p{ margin:0 0 4px; font-size:0.85rem; color:var(--muted); }
 
-  .invite-box{
-    background:var(--panel); border:1px solid var(--hairline); border-radius:16px;
-    padding:16px; margin-bottom:16px; text-align:center;
-  }
-  .invite-box p{ margin:0 0 12px; font-size:0.85rem; color:var(--muted); }
-  .invite-qr-frame{
-    display:inline-block; background:#fff; padding:10px; border-radius:12px; margin-bottom:12px;
-  }
-  .invite-box img{ display:block; width:140px; height:140px; }
-  .invite-link{
-    display:block; font-size:0.72rem; word-break:break-all; color:var(--muted);
-    margin-bottom:12px; font-family:'Manrope', monospace;
-  }
-
-  .players-row{
-    text-align:center;
-    font-size:0.85rem;
-    color:var(--muted);
-    margin:0 0 18px;
-  }
+  .players-row{ text-align:center; font-size:0.85rem; color:var(--muted); margin:0 0 12px; }
   .players-row b{ color:var(--cream); font-weight:600; }
 
   .caller-panel{
-    background:var(--panel); border:1px solid var(--hairline); border-radius:16px;
-    padding:14px 16px; margin-bottom:14px;
-    display:flex; align-items:center; gap:14px;
+    background:var(--panel-raised); border:1px solid var(--hairline); border-radius:14px;
+    padding:11px 14px; margin-bottom:14px;
+    display:flex; align-items:center; gap:12px;
   }
   .ball{
-    width:64px; height:64px; border-radius:50%; flex-shrink:0;
+    width:52px; height:52px; border-radius:50%; flex-shrink:0;
     background:radial-gradient(circle at 35% 30%, #2A333B, #12161A 75%);
     border:1px solid var(--hairline-strong);
-    box-shadow:0 0 0 1px rgba(201,161,90,0.15), 0 8px 20px -8px rgba(0,0,0,0.7);
+    box-shadow:0 0 0 1px rgba(201,161,90,0.15), 0 6px 16px -8px rgba(0,0,0,0.7);
     display:flex; align-items:center; justify-content:center;
-    font-family:'Fraunces', serif; font-weight:700; font-size:1.55rem;
+    font-family:'Fraunces', serif; font-weight:700; font-size:1.25rem;
     color:var(--gold-bright);
     transition:transform 0.28s cubic-bezier(.34,1.56,.64,1);
   }
   .ball.pop{ transform:scale(1.14); }
   .caller-info{ flex:1; min-width:0; }
-  #countdownText{ font-weight:600; font-size:0.98rem; color:var(--cream); }
-  #poolStatus{ font-size:0.78rem; color:var(--muted); margin-top:2px; }
-
-  .history{ display:flex; gap:8px; overflow-x:auto; padding:2px 2px 16px; }
-  .chip{
-    flex-shrink:0; min-width:32px; height:32px; padding:0 4px; border-radius:50%;
-    border:1px solid var(--hairline-strong); color:var(--muted);
-    display:flex; align-items:center; justify-content:center;
-    font-weight:600; font-size:0.8rem; background:transparent;
-  }
-  .chip.latest{
-    background:linear-gradient(180deg, var(--gold-bright), var(--gold));
-    color:#241a0a; border-color:transparent;
-  }
-
-  .board-toggle-row{ text-align:center; margin-bottom:12px; }
-  .called-board{
-    display:grid; grid-template-columns:repeat(10, 1fr); gap:4px;
-    margin:0 0 16px; padding:12px; background:var(--panel); border:1px solid var(--hairline); border-radius:14px;
-  }
-  .board-cell{
-    aspect-ratio:1; display:flex; align-items:center; justify-content:center;
-    font-size:0.63rem; font-weight:600; border-radius:6px;
-    color:var(--muted); border:1px solid var(--hairline);
-  }
-  .board-cell.called{
-    background:linear-gradient(180deg, var(--gold-bright), var(--gold));
-    color:#241a0a; border-color:transparent;
-  }
+  #countdownText{ font-weight:600; font-size:0.88rem; color:var(--cream); }
+  #poolStatus{ font-size:0.72rem; color:var(--muted); margin-top:1px; }
 
   .card{
-    background:var(--panel); border:1px solid var(--hairline); border-radius:18px;
-    padding:12px; box-shadow:0 20px 40px -20px rgba(0,0,0,0.6); position:relative;
+    background:var(--panel); border:1px solid rgba(201,161,90,0.25); border-radius:20px;
+    padding:14px; box-shadow:0 26px 50px -22px rgba(0,0,0,0.7); position:relative;
   }
-  .grid{ display:grid; grid-template-columns:repeat(5, 1fr); gap:7px; }
+  .grid{ display:grid; grid-template-columns:repeat(5, 1fr); gap:8px; }
   .cell{
-    aspect-ratio:1; border-radius:11px; border:1px solid var(--hairline);
+    aspect-ratio:1; border-radius:12px; border:1px solid var(--hairline);
     background:var(--panel-raised); display:flex; align-items:center; justify-content:center;
-    font-family:'Fraunces', serif; font-weight:600; font-size:1.15rem; color:var(--cream);
+    font-family:'Fraunces', serif; font-weight:600; font-size:1.28rem; color:var(--cream);
     cursor:pointer; position:relative; user-select:none;
     transition:transform 0.12s ease, background 0.18s ease;
   }
@@ -235,14 +192,50 @@
   }
   .cell.shake{ animation:shake 0.4s; }
 
-  .pattern-row{ display:flex; gap:6px; margin-top:18px; background:var(--panel); border:1px solid var(--hairline); border-radius:12px; padding:4px; }
+  .history{ display:flex; gap:8px; overflow-x:auto; padding:12px 2px 2px; }
+  .chip{
+    flex-shrink:0; min-width:32px; height:32px; padding:0 4px; border-radius:50%;
+    border:1px solid var(--hairline-strong); color:var(--muted);
+    display:flex; align-items:center; justify-content:center;
+    font-weight:600; font-size:0.8rem; background:transparent;
+  }
+  .chip.latest{
+    background:linear-gradient(180deg, var(--gold-bright), var(--gold));
+    color:#241a0a; border-color:transparent;
+  }
+
+  .board-toggle-row{ text-align:center; margin:2px 0 10px; }
+  .called-board{
+    display:grid; grid-template-columns:repeat(10, 1fr); gap:4px;
+    margin:0 0 16px; padding:12px; background:var(--panel); border:1px solid var(--hairline); border-radius:14px;
+  }
+  .board-cell{
+    aspect-ratio:1; display:flex; align-items:center; justify-content:center;
+    font-size:0.63rem; font-weight:600; border-radius:6px;
+    color:var(--muted); border:1px solid var(--hairline);
+  }
+  .board-cell.called{
+    background:linear-gradient(180deg, var(--gold-bright), var(--gold));
+    color:#241a0a; border-color:transparent;
+  }
+
+  .pattern-row{ display:flex; gap:6px; margin-top:16px; background:var(--panel); border:1px solid var(--hairline); border-radius:12px; padding:4px; }
   .pattern-chip{
     flex:1; background:transparent; border:none; color:var(--muted);
     font-size:0.74rem; padding:9px 4px; border-radius:9px; font-weight:600;
   }
-  .pattern-chip.active{
-    background:var(--panel-raised); color:var(--gold-bright);
+  .pattern-chip.active{ background:var(--panel-raised); color:var(--gold-bright); }
+
+  .invite-box{
+    display:flex; align-items:center; gap:10px;
+    background:var(--panel-raised); border-radius:12px; padding:10px 12px; margin-top:16px;
   }
+  .invite-qr-frame{ background:#fff; padding:4px; border-radius:8px; flex-shrink:0; }
+  .invite-qr-frame img{ display:block; width:48px; height:48px; }
+  .invite-text{ flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
+  .invite-label{ font-size:0.74rem; color:var(--muted); }
+  .invite-link{ font-size:0.68rem; color:var(--muted); font-family:monospace; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .invite-copy-btn{ flex-shrink:0; padding:8px 12px; font-size:0.78rem; }
 
   .leave-row{ text-align:center; margin-top:16px; }
 
@@ -283,10 +276,40 @@
 <body>
 <div class="wrap">
 
-  <div id="joinScreen">
+  <div id="modeScreen">
     <header>
       <h1>Bingo Night</h1>
-      <p>Play together from two phones</p>
+      <p>How do you want to play?</p>
+    </header>
+    <div class="mode-options">
+      <button type="button" class="mode-card" data-mode="computer">
+        <span class="mode-emoji">🤖</span>
+        <span class="mode-text">
+          <span class="mode-title">Solo vs Computer</span>
+          <span class="mode-sub">Practice anytime, no partner needed</span>
+        </span>
+      </button>
+      <button type="button" class="mode-card" data-mode="duo">
+        <span class="mode-emoji">👥</span>
+        <span class="mode-text">
+          <span class="mode-title">Head to Head</span>
+          <span class="mode-sub">Just the two of you</span>
+        </span>
+      </button>
+      <button type="button" class="mode-card" data-mode="squad">
+        <span class="mode-emoji">🎉</span>
+        <span class="mode-text">
+          <span class="mode-title">Party</span>
+          <span class="mode-sub">Up to 4 players</span>
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <div id="joinScreen" class="hidden">
+    <header>
+      <h1>Bingo Night</h1>
+      <p id="joinSubtitle">Play together from two phones</p>
     </header>
     <div class="setup-notice hidden" id="setupNotice">
       <strong>One-time setup needed.</strong> This game needs a database to sync between phones. In your Vercel project: <strong>Storage → Marketplace Database Providers → Upstash for Redis</strong>, connect it to this project, then redeploy. Refresh this page once that's done.
@@ -294,11 +317,16 @@
     <div class="card-panel">
       <p>Your name</p>
       <input type="text" id="nameInput" placeholder="e.g. Mustafa" maxlength="20">
-      <label for="roomInput">Room code</label>
-      <input type="text" id="roomInput" placeholder="e.g. FOX4" maxlength="6" style="text-transform:uppercase;">
-      <button type="button" class="link-btn" id="generateCodeBtn">Generate a new code instead</button>
+      <div id="roomCodeSection">
+        <label for="roomInput">Room code</label>
+        <input type="text" id="roomInput" placeholder="e.g. FOX4" maxlength="6" style="text-transform:uppercase;">
+        <button type="button" class="link-btn" id="generateCodeBtn">Generate a new code instead</button>
+      </div>
       <div class="error-text" id="joinError"></div>
       <button class="btn-primary" id="joinBtn">Join room</button>
+    </div>
+    <div class="leave-row">
+      <button type="button" class="link-btn" id="backToModeBtn">← Change mode</button>
     </div>
   </div>
 
@@ -306,16 +334,9 @@
     <button type="button" class="mute-btn" id="muteBtn" aria-label="Toggle sound">🔊</button>
     <header>
       <h1>Bingo Night</h1>
-      <p class="room-line">Room <span>·</span> <span id="roomPill"></span></p>
+      <p class="room-line" id="roomLine"><span class="room-label">Room</span> <span id="roomPill"></span></p>
     </header>
     <div class="players-row" id="playersRow"></div>
-
-    <div class="invite-box hidden" id="inviteBox">
-      <p>Waiting for your partner — share this</p>
-      <div class="invite-qr-frame"><img id="inviteQr" alt="QR code to join this room"></div>
-      <span class="invite-link" id="inviteLink"></span>
-      <button type="button" class="btn-ghost" id="copyInviteBtn">Copy invite link</button>
-    </div>
 
     <div class="caller-panel">
       <div class="ball" id="ball">–</div>
@@ -324,13 +345,6 @@
         <div id="poolStatus">50 numbers left</div>
       </div>
     </div>
-
-    <div class="history" id="history" aria-label="Called numbers"></div>
-
-    <div class="board-toggle-row">
-      <button type="button" class="link-btn" id="boardToggle">Show all numbers</button>
-    </div>
-    <div class="called-board hidden" id="calledBoard"></div>
 
     <div class="card">
       <div class="grid" id="grid"></div>
@@ -341,7 +355,22 @@
       </div>
     </div>
 
+    <div class="history" id="history" aria-label="Called numbers"></div>
+    <div class="board-toggle-row">
+      <button type="button" class="link-btn" id="boardToggle">Show all numbers</button>
+    </div>
+    <div class="called-board hidden" id="calledBoard"></div>
+
     <div class="pattern-row" id="patternRow"></div>
+
+    <div class="invite-box hidden" id="inviteBox">
+      <div class="invite-qr-frame"><img id="inviteQr" alt="QR code to join this room"></div>
+      <div class="invite-text">
+        <span class="invite-label">Invite others</span>
+        <span class="invite-link" id="inviteLink"></span>
+      </div>
+      <button type="button" class="btn-ghost invite-copy-btn" id="copyInviteBtn">Copy</button>
+    </div>
 
     <div class="leave-row">
       <button type="button" class="link-btn" id="leaveBtn">Leave room</button>
@@ -355,6 +384,7 @@
   const FREE_INDEX = 12;
   const CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   const CALL_INTERVAL_MS = 30000;
+  const MODE_CAPS = { duo: 2, squad: 4 };
 
   const LINES = [
     [0,1,2,3,4],[5,6,7,8,9],[10,11,12,13,14],[15,16,17,18,19],[20,21,22,23,24],
@@ -370,15 +400,20 @@
   };
   const PATTERN_ORDER = ['line', 'corners', 'stamp', 'x', 'blackout'];
 
+  let GAME_MODE = null;      // 'computer' | 'duo' | 'squad'
+  let selectedMode = 'duo';
+  let roomCapacity = 2;
   let ROOM = null;
   let NAME = null;
   let round = 0;
   let currentPattern = 'line';
   let cardNumbers = [];
   let manualMarks = new Set();
+  let botCardNumbers = [];
+  let botMarks = new Set();
   let history = [];
   let pool = [];
-  let nextCallAt = 0;
+  let nextCallAt = null;
   let winner = null;
   let players = [];
   let lastHistoryLen = -1;
@@ -468,7 +503,6 @@
   function showSetupNotice(){
     const notice = el('setupNotice');
     if(notice) notice.classList.remove('hidden');
-    el('joinBtn').disabled = true;
   }
 
   async function checkBackendReady(){
@@ -484,6 +518,7 @@
   function keyWinner(){ return `room:${ROOM}:winner`; }
   function keyRound(){ return `room:${ROOM}:round`; }
   function keyPattern(){ return `room:${ROOM}:pattern`; }
+  function keyMode(){ return `room:${ROOM}:mode`; }
   function keyCard(name){ return `room:${ROOM}:card:${name}`; }
 
   // ---------- sound ----------
@@ -542,6 +577,30 @@
     return s;
   }
 
+  // ---------- mode picker ----------
+  document.querySelectorAll('.mode-card').forEach(btn => {
+    btn.addEventListener('click', () => pickMode(btn.dataset.mode));
+  });
+
+  function pickMode(mode){
+    selectedMode = mode;
+    el('modeScreen').classList.add('hidden');
+    el('joinScreen').classList.remove('hidden');
+    el('joinError').textContent = '';
+    const isComputer = mode === 'computer';
+    el('roomCodeSection').classList.toggle('hidden', isComputer);
+    el('joinBtn').textContent = isComputer ? 'Start playing' : 'Join room';
+    el('joinSubtitle').textContent = isComputer
+      ? 'Just you and the bot'
+      : (mode === 'squad' ? 'Invite up to 3 friends' : 'Play together from two phones');
+    el('nameInput').focus();
+  }
+
+  el('backToModeBtn').addEventListener('click', () => {
+    el('joinScreen').classList.add('hidden');
+    el('modeScreen').classList.remove('hidden');
+  });
+
   // ---------- join flow ----------
   el('generateCodeBtn').addEventListener('click', () => {
     el('roomInput').value = generateRoomCode();
@@ -549,12 +608,25 @@
 
   el('joinBtn').addEventListener('click', async () => {
     const name = el('nameInput').value.trim();
-    const room = el('roomInput').value.trim().toUpperCase();
-    if(!name || !room){
-      el('joinError').textContent = 'Enter your name and a room code.';
+    if(!name){
+      el('joinError').textContent = 'Enter your name.';
       return;
     }
     getAudioCtx() && getAudioCtx().resume().catch(() => {});
+
+    if(selectedMode === 'computer'){
+      startComputerGame(name);
+      return;
+    }
+
+    const room = el('roomInput').value.trim().toUpperCase();
+    if(!room){
+      el('joinError').textContent = 'Enter a room code.';
+      return;
+    }
+    const ready = await checkBackendReady();
+    if(!ready){ showSetupNotice(); return; }
+
     NAME = name;
     ROOM = room;
     await setIdentity({ name: NAME, room: ROOM });
@@ -564,9 +636,10 @@
   el('leaveBtn').addEventListener('click', async () => {
     if(pollTimer) clearInterval(pollTimer);
     if(tickTimer) clearInterval(tickTimer);
-    await setIdentity(null);
+    if(GAME_MODE !== 'computer') await setIdentity(null);
+    GAME_MODE = null;
     el('gameScreen').classList.add('hidden');
-    el('joinScreen').classList.remove('hidden');
+    el('modeScreen').classList.remove('hidden');
     el('nameInput').value = '';
     el('roomInput').value = '';
   });
@@ -581,8 +654,8 @@
     const url = location.origin + location.pathname + '?room=' + ROOM;
     try{
       await navigator.clipboard.writeText(url);
-      el('copyInviteBtn').textContent = 'Copied!';
-      setTimeout(() => { el('copyInviteBtn').textContent = 'Copy invite link'; }, 1800);
+      el('copyInviteBtn').textContent = 'Copied';
+      setTimeout(() => { el('copyInviteBtn').textContent = 'Copy'; }, 1800);
     }catch(e){}
   });
 
@@ -595,15 +668,27 @@
 
   el('playAgainBtn').addEventListener('click', () => startNewRound(currentPattern));
 
+  // ---------- entering a multiplayer room ----------
   async function enterRoom(){
     el('joinError').textContent = '';
-    el('roomPill').textContent = ROOM;
 
     isMuted = await getMutePref();
     el('muteBtn').textContent = isMuted ? '🔇' : '🔊';
 
+    let mode = await getVal(keyMode(), true, null);
+    if(!mode){
+      mode = selectedMode === 'squad' ? 'squad' : 'duo';
+      await setVal(keyMode(), true, mode);
+    }
+    GAME_MODE = mode;
+    roomCapacity = MODE_CAPS[mode] || 2;
+
     const existingPlayers = await getVal(keyPlayers(), true, []);
     if(!existingPlayers.includes(NAME)){
+      if(existingPlayers.length >= roomCapacity){
+        el('joinError').textContent = 'This room is full (' + roomCapacity + '/' + roomCapacity + ' players).';
+        return;
+      }
       existingPlayers.push(NAME);
       await setVal(keyPlayers(), true, existingPlayers);
     }
@@ -614,18 +699,20 @@
 
     let calls = await getVal(keyCalls(), true, null);
     if(!calls){
-      calls = { pool: shuffledRange(1, 50), history: [], nextCallAt: Date.now() + CALL_INTERVAL_MS };
+      calls = { pool: shuffledRange(1, 50), history: [], nextCallAt: null };
       await setVal(keyCalls(), true, calls);
     }
     pool = calls.pool;
     history = calls.history;
-    nextCallAt = calls.nextCallAt || (Date.now() + CALL_INTERVAL_MS);
+    nextCallAt = calls.nextCallAt || null;
     lastHistoryLen = history.length;
 
     winner = await getVal(keyWinner(), true, null);
 
     await loadOrCreateMyCard();
 
+    el('roomLine').classList.remove('hidden');
+    el('roomPill').textContent = ROOM;
     el('joinScreen').classList.add('hidden');
     el('gameScreen').classList.remove('hidden');
 
@@ -639,10 +726,30 @@
     renderPatternChips();
     updateCountdownDisplay();
 
+    await maybeStartClock();
+
     if(pollTimer) clearInterval(pollTimer);
     if(tickTimer) clearInterval(tickTimer);
     pollTimer = setInterval(poll, 1500);
     tickTimer = setInterval(tick, 1000);
+  }
+
+  async function maybeStartClock(){
+    if(GAME_MODE === 'computer' || winner) return;
+    if(players.length < 2) return;
+    if(nextCallAt) return;
+    const latest = await getVal(keyCalls(), true, null);
+    if(!latest) return;
+    if(latest.nextCallAt){
+      nextCallAt = latest.nextCallAt; pool = latest.pool; history = latest.history;
+      lastHistoryLen = history.length;
+      return;
+    }
+    const gotLock = await claimLock(`room:${ROOM}:lock:start:${round}`, 10);
+    if(!gotLock) return;
+    latest.nextCallAt = Date.now() + CALL_INTERVAL_MS;
+    await setVal(keyCalls(), true, latest);
+    nextCallAt = latest.nextCallAt;
   }
 
   async function loadOrCreateMyCard(){
@@ -655,18 +762,78 @@
     manualMarks = new Set(doc.marks);
   }
 
+  // ---------- solo vs computer ----------
+  function startComputerGame(name){
+    GAME_MODE = 'computer';
+    NAME = name;
+    ROOM = null;
+    round = 1;
+    currentPattern = 'line';
+    pool = shuffledRange(1, 50);
+    history = [];
+    nextCallAt = Date.now() + CALL_INTERVAL_MS;
+    lastHistoryLen = 0;
+    cardNumbers = makeCardNumbers();
+    manualMarks = new Set();
+    botCardNumbers = makeCardNumbers();
+    botMarks = new Set();
+    winner = null;
+    confettiPlayed = false;
+    players = [NAME, 'Bingo Bot'];
+
+    el('roomLine').classList.add('hidden');
+    el('joinScreen').classList.add('hidden');
+    el('gameScreen').classList.remove('hidden');
+
+    renderPlayers();
+    renderHistory();
+    renderCalledBoard();
+    renderPoolStatus();
+    renderBall(null, false);
+    renderCard();
+    renderWinner();
+    renderPatternChips();
+    updateCountdownDisplay();
+
+    if(pollTimer) clearInterval(pollTimer);
+    pollTimer = null;
+    if(tickTimer) clearInterval(tickTimer);
+    tickTimer = setInterval(tick, 1000);
+  }
+
+  function scheduleBotMark(num){
+    if(winner) return;
+    const delay = 1200 + Math.random() * 2800;
+    setTimeout(() => {
+      if(winner) return;
+      const idx = botCardNumbers.indexOf(num);
+      if(idx !== -1 && idx !== FREE_INDEX && Math.random() < 0.88){
+        botMarks.add(idx);
+      }
+      if(patternSatisfied(botMarks)){
+        winner = { name: 'Bingo Bot', round };
+        renderWinner();
+      }
+    }, delay);
+  }
+
   // ---------- rendering ----------
   function renderPlayers(){
+    if(GAME_MODE === 'computer'){
+      el('playersRow').innerHTML = 'Playing: <b>You</b> vs <b>Bingo Bot</b>';
+      el('inviteBox').classList.add('hidden');
+      return;
+    }
     const names = players.map(p => p === NAME ? 'You' : p);
     el('playersRow').innerHTML = 'Playing: <b>' + names.join(', ') + '</b>';
     const box = el('inviteBox');
-    if(players.length >= 2){
+    if(players.length >= roomCapacity){
       box.classList.add('hidden');
     }else{
       box.classList.remove('hidden');
       const url = location.origin + location.pathname + '?room=' + ROOM;
       el('inviteLink').textContent = url;
-      el('inviteQr').src = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=' + encodeURIComponent(url);
+      el('inviteQr').src = 'https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=' + encodeURIComponent(url);
     }
   }
 
@@ -703,8 +870,13 @@
   function updateCountdownDisplay(){
     const textEl = el('countdownText');
     if(!textEl) return;
+    if(GAME_MODE !== 'computer' && players.length < 2){
+      textEl.textContent = 'Waiting for another player…';
+      return;
+    }
     if(winner){ textEl.textContent = 'Round over'; return; }
     if(!pool || pool.length === 0){ textEl.textContent = 'All numbers called'; return; }
+    if(!nextCallAt){ textEl.textContent = 'Starting…'; return; }
     const secs = Math.max(0, Math.ceil((nextCallAt - Date.now()) / 1000));
     textEl.textContent = 'Next call in ' + secs + 's';
   }
@@ -802,6 +974,17 @@
     updateCountdownDisplay();
   }
 
+  // ---------- win checking (shared by human + bot) ----------
+  function patternSatisfied(marksSet){
+    const check = (idx) => idx === FREE_INDEX || marksSet.has(idx);
+    const def = PATTERNS[currentPattern] || PATTERNS.line;
+    if(currentPattern === 'line' || (!def.cells && !def.blocks)){
+      return LINES.some(l => l.every(check));
+    }
+    if(def.blocks) return def.blocks.some(block => block.every(check));
+    return def.cells.every(check);
+  }
+
   // ---------- actions ----------
   async function toggleMark(idx){
     if(idx === FREE_INDEX) return;
@@ -813,22 +996,23 @@
     if(manualMarks.has(idx)) manualMarks.delete(idx);
     else manualMarks.add(idx);
     renderCard();
-    await setVal(keyCard(NAME), true, { round, numbers: cardNumbers, marks: [...manualMarks] });
-    await checkWin();
-  }
-
-  function checkWinCondition(){
-    const def = PATTERNS[currentPattern] || PATTERNS.line;
-    if(currentPattern === 'line' || (!def.cells && !def.blocks)){
-      return LINES.some(l => l.every(i => isMarked(i)));
+    if(GAME_MODE !== 'computer'){
+      await setVal(keyCard(NAME), true, { round, numbers: cardNumbers, marks: [...manualMarks] });
     }
-    if(def.blocks) return def.blocks.some(block => block.every(i => isMarked(i)));
-    return def.cells.every(i => isMarked(i));
+    await checkWin();
   }
 
   async function checkWin(){
     if(winner) return;
-    if(!checkWinCondition()) return;
+    if(!patternSatisfied(manualMarks)) return;
+
+    if(GAME_MODE === 'computer'){
+      winner = { name: NAME, round };
+      el('liveRegion').textContent = 'Bingo!';
+      renderWinner();
+      return;
+    }
+
     const current = await getVal(keyWinner(), true, null);
     if(current && current.round === round){
       winner = current;
@@ -869,6 +1053,23 @@
     history = [];
     nextCallAt = Date.now() + CALL_INTERVAL_MS;
     lastHistoryLen = 0;
+
+    if(GAME_MODE === 'computer'){
+      cardNumbers = makeCardNumbers();
+      manualMarks = new Set();
+      botCardNumbers = makeCardNumbers();
+      botMarks = new Set();
+      renderBall(null, false);
+      renderHistory();
+      renderCalledBoard();
+      renderPoolStatus();
+      renderCard();
+      renderWinner();
+      renderPatternChips();
+      updateCountdownDisplay();
+      return;
+    }
+
     await setVal(keyRound(), true, round);
     await setVal(keyPattern(), true, currentPattern);
     await setVal(keyWinner(), true, null);
@@ -885,10 +1086,38 @@
   }
 
   // ---------- the auto-caller ----------
+  function localAdvanceCall(){
+    const idx = Math.floor(Math.random() * pool.length);
+    const num = pool.splice(idx, 1)[0];
+    history.push(num);
+    nextCallAt = Date.now() + CALL_INTERVAL_MS;
+    lastHistoryLen = history.length;
+    renderBall(num, true);
+    renderHistory();
+    renderCalledBoard();
+    renderPoolStatus();
+    renderCard();
+    updateCountdownDisplay();
+    el('liveRegion').textContent = 'Called ' + num;
+    playCallSound();
+    checkWin();
+    scheduleBotMark(num);
+  }
+
   async function tick(){
     updateCountdownDisplay();
     if(winner) return;
+
+    if(GAME_MODE === 'computer'){
+      if(pool.length === 0) return;
+      if(!nextCallAt || Date.now() < nextCallAt) return;
+      localAdvanceCall();
+      return;
+    }
+
+    if(players.length < 2) return;
     if(pool.length === 0) return;
+    if(!nextCallAt){ await maybeStartClock(); return; }
     if(Date.now() < nextCallAt) return;
     if(isAdvancing) return;
     isAdvancing = true;
@@ -904,7 +1133,7 @@
       applyCalls(latest, true);
       return;
     }
-    if(Date.now() < latest.nextCallAt || latest.pool.length === 0) return;
+    if(!latest.nextCallAt || Date.now() < latest.nextCallAt || latest.pool.length === 0) return;
 
     const lockKey = `room:${ROOM}:lock:${round}:${latest.history.length}`;
     const gotLock = await claimLock(lockKey, 10);
@@ -918,7 +1147,7 @@
     applyCalls(latest, true);
   }
 
-  // ---------- polling for the other player's actions ----------
+  // ---------- polling for the other players' actions ----------
   async function poll(){
     try{
       const remoteRound = await getVal(keyRound(), true, 0);
@@ -927,7 +1156,7 @@
         currentPattern = await getVal(keyPattern(), true, 'line');
         winner = await getVal(keyWinner(), true, null);
         confettiPlayed = false;
-        const calls = await getVal(keyCalls(), true, { pool: shuffledRange(1, 50), history: [], nextCallAt: Date.now() + CALL_INTERVAL_MS });
+        const calls = await getVal(keyCalls(), true, { pool: shuffledRange(1, 50), history: [], nextCallAt: null });
         lastHistoryLen = -1;
         await loadOrCreateMyCard();
         applyCalls(calls, false);
@@ -940,7 +1169,10 @@
       if(remotePlayers.length !== players.length){
         players = remotePlayers;
         renderPlayers();
+        updateCountdownDisplay();
       }
+
+      await maybeStartClock();
 
       const calls = await getVal(keyCalls(), true, { pool, history, nextCallAt });
       applyCalls(calls, true);
@@ -964,13 +1196,19 @@
 
   // ---------- boot ----------
   (async function boot(){
-    const ready = await checkBackendReady();
-    if(!ready){
-      showSetupNotice();
-      return;
-    }
     const identity = await getIdentity();
     if(identity && identity.name && identity.room){
+      const ready = await checkBackendReady();
+      if(!ready){
+        selectedMode = 'duo';
+        el('modeScreen').classList.add('hidden');
+        el('joinScreen').classList.remove('hidden');
+        el('roomCodeSection').classList.remove('hidden');
+        el('nameInput').value = identity.name;
+        el('roomInput').value = identity.room;
+        showSetupNotice();
+        return;
+      }
       NAME = identity.name;
       ROOM = identity.room;
       await enterRoom();
@@ -979,7 +1217,12 @@
     const params = new URLSearchParams(location.search);
     const roomParam = params.get('room');
     if(roomParam){
+      selectedMode = 'duo';
+      el('modeScreen').classList.add('hidden');
+      el('joinScreen').classList.remove('hidden');
+      el('roomCodeSection').classList.remove('hidden');
       el('roomInput').value = roomParam.toUpperCase();
+      el('joinBtn').textContent = 'Join room';
       el('nameInput').focus();
     }
   })();
