@@ -28,7 +28,7 @@
     justify-content:center;
     padding:28px 16px 40px;
   }
-  .wrap{ width:100%; max-width:400px; }
+  .wrap{ width:100%; max-width:400px; position:relative; }
   header{ text-align:center; margin-bottom:18px; }
   h1{
     font-family:'Fredoka', sans-serif;
@@ -81,6 +81,13 @@
     text-decoration:underline; padding:4px 0; margin-top:4px;
   }
 
+  .mute-btn{
+    position:absolute; top:0; right:0;
+    background:transparent; border:2px solid var(--line); border-radius:50%;
+    width:38px; height:38px; padding:0; font-size:1.1rem;
+    display:flex; align-items:center; justify-content:center;
+  }
+
   .card-panel{
     background:var(--ivory);
     border-radius:18px;
@@ -113,6 +120,17 @@
   }
   .players-row b{ color:var(--ivory); }
 
+  .invite-box{
+    background:var(--ivory); color:var(--ink); border-radius:14px;
+    padding:14px; margin-bottom:16px; text-align:center;
+  }
+  .invite-box p{ margin:0 0 8px; font-size:0.85rem; color:#4A5A4E; }
+  .invite-box img{ display:block; margin:10px auto; border-radius:8px; width:150px; height:150px; }
+  .invite-link{
+    display:block; font-size:0.72rem; word-break:break-all; color:#4A5A4E;
+    margin-bottom:10px; font-family:monospace;
+  }
+
   .caller{ display:flex; align-items:center; gap:16px; justify-content:center; margin-bottom:14px; }
   .ball{
     width:92px; height:92px; border-radius:50%;
@@ -122,10 +140,11 @@
     color:var(--ink); flex-shrink:0; transition:transform 0.25s ease;
   }
   .ball.pop{ transform:scale(1.12); }
-  .caller-controls{ display:flex; flex-direction:column; gap:8px; flex:1; }
-  #poolStatus{ font-size:0.78rem; color:var(--ivory-dim); text-align:center; }
+  .caller-controls{ display:flex; flex-direction:column; gap:6px; flex:1; }
+  #countdownText{ font-family:'Fredoka', sans-serif; font-weight:600; font-size:1.05rem; }
+  #poolStatus{ font-size:0.78rem; color:var(--ivory-dim); }
 
-  .history{ display:flex; gap:8px; overflow-x:auto; padding:4px 2px 14px; }
+  .history{ display:flex; gap:8px; overflow-x:auto; padding:4px 2px 10px; }
   .chip{
     flex-shrink:0; min-width:34px; height:34px; border-radius:50%;
     background:var(--ivory-dim); color:var(--ink);
@@ -133,6 +152,18 @@
     font-weight:600; font-size:0.85rem;
   }
   .chip.latest{ background:var(--gold); }
+
+  .board-toggle-row{ text-align:center; margin-bottom:10px; }
+  .called-board{
+    display:grid; grid-template-columns:repeat(10, 1fr); gap:4px;
+    margin:0 0 14px; padding:10px; background:var(--ivory); border-radius:12px;
+  }
+  .board-cell{
+    aspect-ratio:1; display:flex; align-items:center; justify-content:center;
+    font-size:0.65rem; font-weight:600; border-radius:5px;
+    background:var(--ivory-dim); color:var(--ink);
+  }
+  .board-cell.called{ background:var(--gold); }
 
   .card{ background:var(--ivory); border-radius:18px; padding:12px; box-shadow:0 10px 30px rgba(0,0,0,0.35); position:relative; }
   .grid{ display:grid; grid-template-columns:repeat(5, 1fr); gap:7px; }
@@ -150,20 +181,37 @@
     content:""; position:absolute; width:70%; height:70%; border-radius:50%;
     background:rgba(28,43,34,0.18);
   }
+  @keyframes shake{
+    10%,90%{ transform:translateX(-2px); } 20%,80%{ transform:translateX(3px); }
+    30%,50%,70%{ transform:translateX(-5px); } 40%,60%{ transform:translateX(5px); }
+  }
+  .cell.shake{ animation:shake 0.4s; }
 
-  .footer-row{ display:flex; gap:10px; margin-top:16px; }
-  .footer-row button{ flex:1; }
+  .pattern-row{ display:flex; flex-wrap:wrap; gap:6px; margin-top:16px; justify-content:center; }
+  .pattern-chip{
+    background:transparent; border:2px solid var(--line); color:var(--ivory-dim);
+    font-size:0.78rem; padding:7px 12px;
+  }
+  .pattern-chip.active{ background:var(--gold); color:var(--ink); border-color:var(--gold); }
+
   .leave-row{ text-align:center; margin-top:14px; }
 
   .win-banner{
     position:absolute; inset:0; background:rgba(14,42,30,0.92);
     border-radius:18px; display:none; flex-direction:column;
     align-items:center; justify-content:center; gap:10px; text-align:center; padding:20px;
+    overflow:hidden;
   }
   .win-banner.show{ display:flex; }
   .win-banner h2{ font-family:'Fredoka', sans-serif; font-size:2.1rem; color:var(--gold); margin:0; }
   .win-banner p{ color:var(--ivory-dim); margin:0; font-size:0.9rem; }
   .win-banner button{ margin-top:8px; background:var(--gold); color:var(--ink); }
+
+  .confetti-piece{
+    position:absolute; top:-20px; width:8px; height:14px; opacity:0.9;
+    animation:confetti-fall 2s ease-in forwards;
+  }
+  @keyframes confetti-fall{ to{ transform:translateY(340px) rotate(360deg); opacity:0; } }
 
   .sr-only{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
   .hidden{ display:none !important; }
@@ -174,7 +222,6 @@
     margin-bottom:16px;
   }
   .setup-notice strong{ color:var(--gold); }
-  .setup-notice code{ background:rgba(0,0,0,0.25); padding:1px 5px; border-radius:4px; }
 
   @media (prefers-reduced-motion: reduce){ *{ transition:none !important; animation:none !important; } }
 </style>
@@ -202,34 +249,46 @@
   </div>
 
   <div id="gameScreen" class="hidden">
+    <button type="button" class="mute-btn" id="muteBtn" aria-label="Toggle sound">🔊</button>
     <header>
       <h1>Bingo Night</h1>
       <div class="room-pill" id="roomPill"></div>
     </header>
     <div class="players-row" id="playersRow"></div>
 
+    <div class="invite-box hidden" id="inviteBox">
+      <p>Waiting for your partner — share this:</p>
+      <img id="inviteQr" alt="QR code to join this room">
+      <span class="invite-link" id="inviteLink"></span>
+      <button type="button" class="btn-ghost" id="copyInviteBtn">Copy invite link</button>
+    </div>
+
     <div class="caller">
       <div class="ball" id="ball">–</div>
       <div class="caller-controls">
-        <button class="btn-primary" style="margin-top:0;" id="callBtn">Call a number</button>
+        <div id="countdownText">Next call in 30s</div>
         <span id="poolStatus">50 numbers left</span>
       </div>
     </div>
 
     <div class="history" id="history" aria-label="Called numbers"></div>
 
+    <div class="board-toggle-row">
+      <button type="button" class="link-btn" id="boardToggle">Show all numbers</button>
+    </div>
+    <div class="called-board hidden" id="calledBoard"></div>
+
     <div class="card">
       <div class="grid" id="grid"></div>
       <div class="win-banner" id="winBanner">
         <h2 id="winText">Bingo!</h2>
-        <p>Start a fresh round whenever you're both ready.</p>
-        <button id="newRoundBtn">New round</button>
+        <p id="winSub">Pick a pattern below to play again.</p>
+        <button id="playAgainBtn">Play again</button>
       </div>
     </div>
 
-    <div class="footer-row">
-      <button class="btn-ghost" id="newRoundBtn2">New round</button>
-    </div>
+    <div class="pattern-row" id="patternRow"></div>
+
     <div class="leave-row">
       <button type="button" class="link-btn" id="leaveBtn">Leave room</button>
     </div>
@@ -241,18 +300,40 @@
 <script>
   const FREE_INDEX = 12;
   const CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  const CALL_INTERVAL_MS = 30000;
+
+  const LINES = [
+    [0,1,2,3,4],[5,6,7,8,9],[10,11,12,13,14],[15,16,17,18,19],[20,21,22,23,24],
+    [0,5,10,15,20],[1,6,11,16,21],[2,7,12,17,22],[3,8,13,18,23],[4,9,14,19,24],
+    [0,6,12,18,24],[4,8,12,16,20]
+  ];
+  const PATTERNS = {
+    line:     { label: 'Any line' },
+    corners:  { label: '4 Corners', cells: [0,4,20,24] },
+    stamp:    { label: 'Stamp', blocks: [[0,1,5,6],[3,4,8,9],[15,16,20,21],[18,19,23,24]] },
+    x:        { label: 'Letter X', cells: [0,4,6,8,12,16,18,20,24] },
+    blackout: { label: 'Blackout', cells: Array.from({length:25}, (_, i) => i) }
+  };
+  const PATTERN_ORDER = ['line', 'corners', 'stamp', 'x', 'blackout'];
 
   let ROOM = null;
   let NAME = null;
   let round = 0;
+  let currentPattern = 'line';
   let cardNumbers = [];
   let manualMarks = new Set();
   let history = [];
   let pool = [];
+  let nextCallAt = 0;
   let winner = null;
   let players = [];
   let lastHistoryLen = -1;
+  let confettiPlayed = false;
+  let isMuted = false;
+  let isAdvancing = false;
   let pollTimer = null;
+  let tickTimer = null;
+  let audioCtx = null;
 
   const el = (id) => document.getElementById(id);
 
@@ -262,8 +343,6 @@
   // backed by a Redis database. Same call sites work either way.
   const hasArtifactStorage = () => typeof window.storage !== 'undefined' && window.storage;
 
-  let backendReady = true; // set to false if /api/room reports the database isn't connected yet
-
   async function getVal(key, shared, fallback){
     try{
       if(hasArtifactStorage()){
@@ -272,7 +351,7 @@
         return JSON.parse(res.value);
       }
       const res = await fetch('/api/room?key=' + encodeURIComponent(key));
-      if(res.status === 501){ backendReady = false; showSetupNotice(); return fallback; }
+      if(res.status === 501){ showSetupNotice(); return fallback; }
       if(!res.ok) return fallback;
       const data = await res.json();
       if(data.value === null || data.value === undefined) return fallback;
@@ -292,10 +371,27 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ key, value: JSON.stringify(value) })
       });
-      if(res.status === 501){ backendReady = false; showSetupNotice(); }
+      if(res.status === 501) showSetupNotice();
     }catch(e){
       console.error('storage write failed', key, e);
     }
+  }
+
+  // Atomic "claim" (SET NX EX) so only one device performs a given auto-call.
+  // Only meaningful against a real Redis backend; inside a Claude artifact
+  // there's no such primitive, so we just skip locking there.
+  async function claimLock(key, ttlSeconds){
+    if(hasArtifactStorage()) return true;
+    try{
+      const res = await fetch('/api/room', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'claim', key, ttlSeconds })
+      });
+      if(!res.ok) return false;
+      const data = await res.json();
+      return !!data.claimed;
+    }catch(e){ return false; }
   }
 
   async function getIdentity(){
@@ -312,12 +408,19 @@
       else localStorage.setItem('bingo-identity', JSON.stringify(val));
     }catch(e){}
   }
+  async function getMutePref(){
+    if(hasArtifactStorage()) return getVal('mute-pref', false, false);
+    try{ return localStorage.getItem('bingo-muted') === '1'; }catch(e){ return false; }
+  }
+  async function setMutePref(val){
+    if(hasArtifactStorage()) return setVal('mute-pref', false, val);
+    try{ localStorage.setItem('bingo-muted', val ? '1' : '0'); }catch(e){}
+  }
 
   function showSetupNotice(){
     const notice = el('setupNotice');
     if(notice) notice.classList.remove('hidden');
     el('joinBtn').disabled = true;
-    el('callBtn') && (el('callBtn').disabled = true);
   }
 
   async function checkBackendReady(){
@@ -325,14 +428,48 @@
     try{
       const res = await fetch('/api/room?key=' + encodeURIComponent('room:_check:_check'));
       return res.status !== 501;
-    }catch(e){ return true; } // network hiccup, don't block on it
+    }catch(e){ return true; }
   }
 
   function keyPlayers(){ return `room:${ROOM}:players`; }
   function keyCalls(){ return `room:${ROOM}:calls`; }
   function keyWinner(){ return `room:${ROOM}:winner`; }
   function keyRound(){ return `room:${ROOM}:round`; }
+  function keyPattern(){ return `room:${ROOM}:pattern`; }
   function keyCard(name){ return `room:${ROOM}:card:${name}`; }
+
+  // ---------- sound ----------
+  function getAudioCtx(){
+    if(!audioCtx){
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if(Ctx) audioCtx = new Ctx();
+    }
+    return audioCtx;
+  }
+  function playTone(freq, duration, type, delay, gain){
+    if(isMuted) return;
+    const ctx = getAudioCtx();
+    if(!ctx) return;
+    try{
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      osc.type = type || 'sine';
+      osc.frequency.value = freq;
+      osc.connect(g); g.connect(ctx.destination);
+      const t0 = ctx.currentTime + (delay || 0);
+      const vol = gain || 0.15;
+      g.gain.setValueAtTime(vol, t0);
+      g.gain.exponentialRampToValueAtTime(0.001, t0 + duration);
+      osc.start(t0);
+      osc.stop(t0 + duration + 0.02);
+    }catch(e){}
+  }
+  function playCallSound(){ playTone(660, 0.12, 'triangle'); }
+  function playWinSound(){
+    playTone(523.25, 0.18, 'triangle', 0);
+    playTone(659.25, 0.18, 'triangle', 0.15);
+    playTone(783.99, 0.32, 'triangle', 0.3);
+  }
 
   // ---------- setup helpers ----------
   function shuffledRange(min, max){
@@ -369,6 +506,7 @@
       el('joinError').textContent = 'Enter your name and a room code.';
       return;
     }
+    getAudioCtx() && getAudioCtx().resume().catch(() => {});
     NAME = name;
     ROOM = room;
     await setIdentity({ name: NAME, room: ROOM });
@@ -377,6 +515,7 @@
 
   el('leaveBtn').addEventListener('click', async () => {
     if(pollTimer) clearInterval(pollTimer);
+    if(tickTimer) clearInterval(tickTimer);
     await setIdentity(null);
     el('gameScreen').classList.add('hidden');
     el('joinScreen').classList.remove('hidden');
@@ -384,9 +523,36 @@
     el('roomInput').value = '';
   });
 
+  el('muteBtn').addEventListener('click', async () => {
+    isMuted = !isMuted;
+    el('muteBtn').textContent = isMuted ? '🔇' : '🔊';
+    await setMutePref(isMuted);
+  });
+
+  el('copyInviteBtn').addEventListener('click', async () => {
+    const url = location.origin + location.pathname + '?room=' + ROOM;
+    try{
+      await navigator.clipboard.writeText(url);
+      el('copyInviteBtn').textContent = 'Copied!';
+      setTimeout(() => { el('copyInviteBtn').textContent = 'Copy invite link'; }, 1800);
+    }catch(e){}
+  });
+
+  el('boardToggle').addEventListener('click', () => {
+    const board = el('calledBoard');
+    const willShow = board.classList.contains('hidden');
+    board.classList.toggle('hidden');
+    el('boardToggle').textContent = willShow ? 'Hide all numbers' : 'Show all numbers';
+  });
+
+  el('playAgainBtn').addEventListener('click', () => startNewRound(currentPattern));
+
   async function enterRoom(){
     el('joinError').textContent = '';
     el('roomPill').textContent = 'Room ' + ROOM;
+
+    isMuted = await getMutePref();
+    el('muteBtn').textContent = isMuted ? '🔇' : '🔊';
 
     const existingPlayers = await getVal(keyPlayers(), true, []);
     if(!existingPlayers.includes(NAME)){
@@ -396,14 +562,16 @@
     players = existingPlayers;
 
     round = await getVal(keyRound(), true, 0);
+    currentPattern = await getVal(keyPattern(), true, 'line');
 
     let calls = await getVal(keyCalls(), true, null);
     if(!calls){
-      calls = { pool: shuffledRange(1, 50), history: [] };
+      calls = { pool: shuffledRange(1, 50), history: [], nextCallAt: Date.now() + CALL_INTERVAL_MS };
       await setVal(keyCalls(), true, calls);
     }
     pool = calls.pool;
     history = calls.history;
+    nextCallAt = calls.nextCallAt || (Date.now() + CALL_INTERVAL_MS);
     lastHistoryLen = history.length;
 
     winner = await getVal(keyWinner(), true, null);
@@ -415,13 +583,18 @@
 
     renderPlayers();
     renderHistory();
+    renderCalledBoard();
     renderPoolStatus();
     renderBall(history.length ? history[history.length - 1] : null, false);
     renderCard();
     renderWinner();
+    renderPatternChips();
+    updateCountdownDisplay();
 
     if(pollTimer) clearInterval(pollTimer);
-    pollTimer = setInterval(poll, 2500);
+    if(tickTimer) clearInterval(tickTimer);
+    pollTimer = setInterval(poll, 1500);
+    tickTimer = setInterval(tick, 1000);
   }
 
   async function loadOrCreateMyCard(){
@@ -438,6 +611,15 @@
   function renderPlayers(){
     const names = players.map(p => p === NAME ? 'You' : p);
     el('playersRow').innerHTML = 'Playing: <b>' + names.join(', ') + '</b>';
+    const box = el('inviteBox');
+    if(players.length >= 2){
+      box.classList.add('hidden');
+    }else{
+      box.classList.remove('hidden');
+      const url = location.origin + location.pathname + '?room=' + ROOM;
+      el('inviteLink').textContent = url;
+      el('inviteQr').src = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=' + encodeURIComponent(url);
+    }
   }
 
   function renderHistory(){
@@ -451,20 +633,37 @@
     });
   }
 
+  function renderCalledBoard(){
+    const board = el('calledBoard');
+    board.innerHTML = '';
+    for(let n = 1; n <= 50; n++){
+      const cell = document.createElement('div');
+      cell.className = 'board-cell' + (history.includes(n) ? ' called' : '');
+      cell.textContent = n;
+      board.appendChild(cell);
+    }
+  }
+
   function renderPoolStatus(){
-    const btn = el('callBtn');
     if(pool.length === 0){
       el('poolStatus').textContent = 'All numbers called';
-      btn.disabled = true;
     }else{
       el('poolStatus').textContent = pool.length + ' numbers left';
-      btn.disabled = !!winner;
     }
+  }
+
+  function updateCountdownDisplay(){
+    const textEl = el('countdownText');
+    if(!textEl) return;
+    if(winner){ textEl.textContent = 'Round over'; return; }
+    if(!pool || pool.length === 0){ textEl.textContent = 'All numbers called'; return; }
+    const secs = Math.max(0, Math.ceil((nextCallAt - Date.now()) / 1000));
+    textEl.textContent = 'Next call in ' + secs + 's';
   }
 
   function renderBall(num, animate){
     const ball = el('ball');
-    ball.textContent = num === null ? '–' : num;
+    ball.textContent = num === null || num === undefined ? '–' : num;
     if(animate){
       ball.classList.remove('pop');
       void ball.offsetWidth;
@@ -474,8 +673,7 @@
 
   function isMarked(idx){
     if(idx === FREE_INDEX) return true;
-    if(manualMarks.has(idx)) return true;
-    return history.includes(cardNumbers[idx]);
+    return manualMarks.has(idx);
   }
 
   function renderCard(){
@@ -501,20 +699,69 @@
     });
   }
 
+  function shakeCell(idx){
+    const cellEl = el('grid').children[idx];
+    if(!cellEl) return;
+    cellEl.classList.remove('shake');
+    void cellEl.offsetWidth;
+    cellEl.classList.add('shake');
+  }
+
+  function renderPatternChips(){
+    const row = el('patternRow');
+    row.innerHTML = '';
+    PATTERN_ORDER.forEach(id => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'pattern-chip' + (id === currentPattern ? ' active' : '');
+      btn.textContent = PATTERNS[id].label;
+      btn.addEventListener('click', () => startNewRound(id));
+      row.appendChild(btn);
+    });
+  }
+
+  function celebrate(){
+    if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const banner = el('winBanner');
+    const colors = ['#E3A324', '#E1563F', '#F6EFE0', '#3A6B52'];
+    for(let i = 0; i < 24; i++){
+      const piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      piece.style.left = Math.random() * 100 + '%';
+      piece.style.background = colors[i % colors.length];
+      piece.style.animationDelay = (Math.random() * 0.4) + 's';
+      piece.style.transform = 'rotate(' + Math.floor(Math.random() * 360) + 'deg)';
+      banner.appendChild(piece);
+      setTimeout(() => piece.remove(), 2200);
+    }
+  }
+
   function renderWinner(){
     const banner = el('winBanner');
     if(winner){
       el('winText').textContent = (winner.name === NAME ? 'You got' : winner.name + ' got') + ' Bingo!';
+      el('winSub').textContent = PATTERNS[currentPattern].label + ' — pick a pattern below to play again.';
       banner.classList.add('show');
+      if(!confettiPlayed){
+        confettiPlayed = true;
+        celebrate();
+        playWinSound();
+      }
     }else{
       banner.classList.remove('show');
     }
     renderPoolStatus();
+    updateCountdownDisplay();
   }
 
   // ---------- actions ----------
   async function toggleMark(idx){
     if(idx === FREE_INDEX) return;
+    const num = cardNumbers[idx];
+    if(!history.includes(num)){
+      shakeCell(idx);
+      return;
+    }
     if(manualMarks.has(idx)) manualMarks.delete(idx);
     else manualMarks.add(idx);
     renderCard();
@@ -522,61 +769,105 @@
     await checkWin();
   }
 
-  el('callBtn').addEventListener('click', async () => {
-    const latestCalls = await getVal(keyCalls(), true, { pool, history });
-    if(latestCalls.pool.length === 0) return;
-    const idx = Math.floor(Math.random() * latestCalls.pool.length);
-    const num = latestCalls.pool.splice(idx, 1)[0];
-    latestCalls.history.push(num);
-    await setVal(keyCalls(), true, latestCalls);
-
-    pool = latestCalls.pool;
-    history = latestCalls.history;
-    lastHistoryLen = history.length;
-
-    el('liveRegion').textContent = 'Called ' + num;
-    renderBall(num, true);
-    renderHistory();
-    renderPoolStatus();
-    renderCard();
-    await checkWin();
-  });
-
-  async function startNewRound(){
-    round += 1;
-    winner = null;
-    pool = shuffledRange(1, 50);
-    history = [];
-    lastHistoryLen = 0;
-    await setVal(keyRound(), true, round);
-    await setVal(keyWinner(), true, null);
-    await setVal(keyCalls(), true, { pool, history });
-    await loadOrCreateMyCard();
-    renderBall(null, false);
-    renderHistory();
-    renderPoolStatus();
-    renderCard();
-    renderWinner();
+  function checkWinCondition(){
+    const def = PATTERNS[currentPattern] || PATTERNS.line;
+    if(currentPattern === 'line' || !def.cells && !def.blocks){
+      return LINES.some(l => l.every(i => isMarked(i)));
+    }
+    if(def.blocks) return def.blocks.some(block => block.every(i => isMarked(i)));
+    return def.cells.every(i => isMarked(i));
   }
-  el('newRoundBtn').addEventListener('click', startNewRound);
-  el('newRoundBtn2').addEventListener('click', startNewRound);
 
   async function checkWin(){
     if(winner) return;
-    const lines = [
-      [0,1,2,3,4],[5,6,7,8,9],[10,11,12,13,14],[15,16,17,18,19],[20,21,22,23,24],
-      [0,5,10,15,20],[1,6,11,16,21],[2,7,12,17,22],[3,8,13,18,23],[4,9,14,19,24],
-      [0,6,12,18,24],[4,8,12,16,20]
-    ];
-    const won = lines.some(line => line.every(i => isMarked(i)));
-    if(won){
-      const current = await getVal(keyWinner(), true, null);
-      if(current && current.round === round) return;
-      winner = { name: NAME, round };
-      await setVal(keyWinner(), true, winner);
-      el('liveRegion').textContent = 'Bingo!';
+    if(!checkWinCondition()) return;
+    const current = await getVal(keyWinner(), true, null);
+    if(current && current.round === round){
+      winner = current;
       renderWinner();
+      return;
     }
+    winner = { name: NAME, round };
+    await setVal(keyWinner(), true, winner);
+    el('liveRegion').textContent = 'Bingo!';
+    renderWinner();
+  }
+
+  function applyCalls(callsDoc, animate){
+    pool = callsDoc.pool;
+    history = callsDoc.history;
+    nextCallAt = callsDoc.nextCallAt;
+    const changed = history.length !== lastHistoryLen;
+    lastHistoryLen = history.length;
+    renderBall(history.length ? history[history.length - 1] : null, changed && animate);
+    renderHistory();
+    renderCalledBoard();
+    renderPoolStatus();
+    renderCard();
+    updateCountdownDisplay();
+    if(changed && animate && history.length){
+      el('liveRegion').textContent = 'Called ' + history[history.length - 1];
+      playCallSound();
+    }
+    checkWin();
+  }
+
+  async function startNewRound(patternId){
+    round += 1;
+    currentPattern = patternId || currentPattern || 'line';
+    winner = null;
+    confettiPlayed = false;
+    pool = shuffledRange(1, 50);
+    history = [];
+    nextCallAt = Date.now() + CALL_INTERVAL_MS;
+    lastHistoryLen = 0;
+    await setVal(keyRound(), true, round);
+    await setVal(keyPattern(), true, currentPattern);
+    await setVal(keyWinner(), true, null);
+    await setVal(keyCalls(), true, { pool, history, nextCallAt });
+    await loadOrCreateMyCard();
+    renderBall(null, false);
+    renderHistory();
+    renderCalledBoard();
+    renderPoolStatus();
+    renderCard();
+    renderWinner();
+    renderPatternChips();
+    updateCountdownDisplay();
+  }
+
+  // ---------- the auto-caller ----------
+  async function tick(){
+    updateCountdownDisplay();
+    if(winner) return;
+    if(pool.length === 0) return;
+    if(Date.now() < nextCallAt) return;
+    if(isAdvancing) return;
+    isAdvancing = true;
+    try{ await advanceCall(); }
+    finally{ isAdvancing = false; }
+  }
+
+  async function advanceCall(){
+    const latest = await getVal(keyCalls(), true, null);
+    if(!latest) return;
+
+    if(latest.history.length !== history.length || latest.nextCallAt !== nextCallAt){
+      applyCalls(latest, true);
+      return;
+    }
+    if(Date.now() < latest.nextCallAt || latest.pool.length === 0) return;
+
+    const lockKey = `room:${ROOM}:lock:${round}:${latest.history.length}`;
+    const gotLock = await claimLock(lockKey, 10);
+    if(!gotLock) return;
+
+    const idx = Math.floor(Math.random() * latest.pool.length);
+    const num = latest.pool.splice(idx, 1)[0];
+    latest.history.push(num);
+    latest.nextCallAt = Date.now() + CALL_INTERVAL_MS;
+    await setVal(keyCalls(), true, latest);
+    applyCalls(latest, true);
   }
 
   // ---------- polling for the other player's actions ----------
@@ -585,15 +876,14 @@
       const remoteRound = await getVal(keyRound(), true, 0);
       if(remoteRound !== round){
         round = remoteRound;
+        currentPattern = await getVal(keyPattern(), true, 'line');
         winner = await getVal(keyWinner(), true, null);
-        const calls = await getVal(keyCalls(), true, { pool: shuffledRange(1,50), history: [] });
-        pool = calls.pool;
-        history = calls.history;
-        lastHistoryLen = history.length;
+        confettiPlayed = false;
+        const calls = await getVal(keyCalls(), true, { pool: shuffledRange(1, 50), history: [], nextCallAt: Date.now() + CALL_INTERVAL_MS });
+        lastHistoryLen = -1;
         await loadOrCreateMyCard();
-        renderBall(history.length ? history[history.length - 1] : null, false);
-        renderHistory();
-        renderCard();
+        applyCalls(calls, false);
+        renderPatternChips();
         renderWinner();
         return;
       }
@@ -604,19 +894,8 @@
         renderPlayers();
       }
 
-      const calls = await getVal(keyCalls(), true, { pool, history });
-      if(calls.history.length !== lastHistoryLen){
-        pool = calls.pool;
-        history = calls.history;
-        const newNum = history.length ? history[history.length - 1] : null;
-        lastHistoryLen = history.length;
-        renderBall(newNum, true);
-        renderHistory();
-        renderPoolStatus();
-        renderCard();
-        el('liveRegion').textContent = newNum !== null ? 'Called ' + newNum : '';
-        await checkWin();
-      }
+      const calls = await getVal(keyCalls(), true, { pool, history, nextCallAt });
+      applyCalls(calls, true);
 
       const remoteWinner = await getVal(keyWinner(), true, null);
       if(JSON.stringify(remoteWinner) !== JSON.stringify(winner)){
@@ -640,6 +919,13 @@
       NAME = identity.name;
       ROOM = identity.room;
       await enterRoom();
+      return;
+    }
+    const params = new URLSearchParams(location.search);
+    const roomParam = params.get('room');
+    if(roomParam){
+      el('roomInput').value = roomParam.toUpperCase();
+      el('nameInput').focus();
     }
   })();
 </script>

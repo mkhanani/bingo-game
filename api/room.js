@@ -51,6 +51,31 @@ export default async function handler(req, res) {
 
     if (req.method === 'POST') {
       const body = req.body || {};
+
+      if (body.action === 'claim') {
+        const { key, ttlSeconds } = body;
+        if (!key || typeof key !== 'string' || !KEY_PATTERN.test(key)) {
+          res.status(400).json({ error: 'bad_key' });
+          return;
+        }
+        const ttl = Math.max(1, Math.min(60, Number(ttlSeconds) || 10));
+        // Atomic SET key 1 NX EX ttl — only one caller ever gets claimed: true
+        // for a given lock key, which is exactly what lets two devices race
+        // to call the same number without double-calling.
+        const upstream = await fetch(url, {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify(['SET', key, '1', 'NX', 'EX', String(ttl)])
+        });
+        if (!upstream.ok) {
+          res.status(502).json({ error: 'upstream_failed' });
+          return;
+        }
+        const data = await upstream.json();
+        res.status(200).json({ claimed: data.result === 'OK' });
+        return;
+      }
+
       const { key, value } = body;
       if (!key || typeof key !== 'string' || !KEY_PATTERN.test(key)) {
         res.status(400).json({ error: 'bad_key' });
