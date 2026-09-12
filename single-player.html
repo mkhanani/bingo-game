@@ -4,33 +4,37 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bingo Night</title>
+<meta name="theme-color" content="#0C1013">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --felt:#163C2C;
-    --felt-dark:#0E2A1E;
-    --ivory:#F6EFE0;
-    --ivory-dim:#E9DFC6;
-    --line:#3A6B52;
-    --gold:#E3A324;
-    --gold-dark:#B87F12;
-    --coral:#E1563F;
-    --ink:#1C2B22;
+    --bg:#0C1013;
+    --panel:#171C21;
+    --panel-raised:#1F262C;
+    --hairline:rgba(255,255,255,0.09);
+    --hairline-strong:rgba(255,255,255,0.16);
+    --gold:#C9A15A;
+    --gold-bright:#E4C482;
+    --ember:#B8452F;
+    --cream:#F3EEE2;
+    --muted:#8B9096;
   }
 
   *{box-sizing:border-box;}
 
   body{
     margin:0;
-    font-family:'Work Sans', sans-serif;
+    font-family:'Manrope', sans-serif;
     background:
-      radial-gradient(circle at 50% -10%, #1E4C38 0%, var(--felt) 55%, var(--felt-dark) 100%);
-    color:var(--ivory);
+      radial-gradient(ellipse 700px 500px at 50% -8%, #1A2128 0%, transparent 60%),
+      var(--bg);
+    color:var(--cream);
     min-height:100vh;
     display:flex;
     justify-content:center;
-    padding:28px 16px 40px;
+    padding:32px 18px 44px;
   }
 
   .wrap{
@@ -44,47 +48,49 @@
   }
 
   h1{
-    font-family:'Fredoka', sans-serif;
+    font-family:'Fraunces', serif;
+    font-optical-sizing:auto;
     font-weight:700;
-    font-size:2rem;
+    font-size:2.15rem;
+    letter-spacing:-0.01em;
     margin:0;
-    color:var(--ivory);
-    letter-spacing:0.5px;
+    color:var(--cream);
   }
 
   header p{
-    margin:6px 0 0;
+    margin:8px 0 0;
     font-size:0.9rem;
-    color:var(--ivory-dim);
-    opacity:0.8;
+    color:var(--muted);
   }
 
   .caller{
+    background:var(--panel); border:1px solid var(--hairline); border-radius:16px;
+    padding:14px 16px;
     display:flex;
     align-items:center;
-    gap:16px;
-    justify-content:center;
-    margin-bottom:16px;
+    gap:14px;
+    margin-bottom:14px;
   }
 
   .ball{
-    width:92px;
-    height:92px;
+    width:64px;
+    height:64px;
     border-radius:50%;
-    background:var(--ivory);
-    border:4px solid var(--coral);
+    background:radial-gradient(circle at 35% 30%, #2A333B, #12161A 75%);
+    border:1px solid var(--hairline-strong);
+    box-shadow:0 0 0 1px rgba(201,161,90,0.15), 0 8px 20px -8px rgba(0,0,0,0.7);
     display:flex;
     align-items:center;
     justify-content:center;
-    font-family:'Fredoka', sans-serif;
+    font-family:'Fraunces', serif;
     font-weight:700;
-    font-size:2rem;
-    color:var(--ink);
+    font-size:1.55rem;
+    color:var(--gold-bright);
     flex-shrink:0;
-    transition:transform 0.25s ease;
+    transition:transform 0.28s cubic-bezier(.34,1.56,.64,1);
   }
 
-  .ball.pop{ transform:scale(1.12); }
+  .ball.pop{ transform:scale(1.14); }
 
   .caller-controls{
     display:flex;
@@ -94,31 +100,31 @@
   }
 
   button{
-    font-family:'Work Sans', sans-serif;
+    font-family:'Manrope', sans-serif;
     font-weight:600;
-    font-size:0.95rem;
-    border-radius:999px;
+    font-size:0.92rem;
+    border-radius:11px;
     border:none;
-    padding:12px 18px;
+    padding:13px 18px;
     cursor:pointer;
-    transition:transform 0.15s ease, opacity 0.15s ease;
+    transition:transform 0.12s ease, opacity 0.15s ease;
   }
 
   button:active{ transform:scale(0.97); }
-  button:focus-visible{ outline:3px solid var(--gold); outline-offset:2px; }
+  button:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
 
   .btn-call{
-    background:var(--coral);
-    color:var(--ivory);
-    box-shadow:0 4px 0 #A83B29;
+    background:linear-gradient(180deg, var(--gold-bright), var(--gold));
+    color:#241a0a;
+    box-shadow:0 6px 18px -6px rgba(201,161,90,0.55);
   }
-  .btn-call:disabled{ opacity:0.5; cursor:not-allowed; box-shadow:none; }
+  .btn-call:disabled{ opacity:0.45; cursor:not-allowed; box-shadow:none; }
 
   .btn-ghost{
     background:transparent;
-    color:var(--ivory-dim);
-    border:2px solid var(--line);
-    padding:9px 14px;
+    color:var(--muted);
+    border:1px solid var(--hairline-strong);
+    padding:10px 16px;
     font-size:0.85rem;
   }
 
@@ -133,34 +139,38 @@
     display:flex;
     gap:8px;
     overflow-x:auto;
-    padding:4px 2px 14px;
+    padding:2px 2px 14px;
     margin-bottom:6px;
   }
   .history::-webkit-scrollbar{ height:4px; }
 
   .chip{
     flex-shrink:0;
-    min-width:34px;
-    height:34px;
+    min-width:32px;
+    height:32px;
+    padding:0 4px;
     border-radius:50%;
-    background:var(--ivory-dim);
-    color:var(--ink);
+    border:1px solid var(--hairline-strong);
+    color:var(--muted);
     display:flex;
     align-items:center;
     justify-content:center;
     font-weight:600;
-    font-size:0.85rem;
+    font-size:0.8rem;
+    background:transparent;
   }
   .chip.latest{
-    background:var(--gold);
-    color:var(--ink);
+    background:linear-gradient(180deg, var(--gold-bright), var(--gold));
+    color:#241a0a;
+    border-color:transparent;
   }
 
   .card{
-    background:var(--ivory);
+    background:var(--panel);
+    border:1px solid var(--hairline);
     border-radius:18px;
     padding:12px;
-    box-shadow:0 10px 30px rgba(0,0,0,0.35);
+    box-shadow:0 20px 40px -20px rgba(0,0,0,0.6);
     position:relative;
   }
 
@@ -172,50 +182,54 @@
 
   .cell{
     aspect-ratio:1;
-    border-radius:10px;
-    border:2px solid var(--line);
-    background:var(--ivory-dim);
+    border-radius:11px;
+    border:1px solid var(--hairline);
+    background:var(--panel-raised);
     display:flex;
     align-items:center;
     justify-content:center;
-    font-family:'Fredoka', sans-serif;
+    font-family:'Fraunces', serif;
     font-weight:600;
     font-size:1.15rem;
-    color:var(--ink);
+    color:var(--cream);
     cursor:pointer;
     position:relative;
     user-select:none;
-    transition:transform 0.12s ease;
+    transition:transform 0.12s ease, background 0.18s ease;
   }
-  .cell:active{ transform:scale(0.94); }
-  .cell:focus-visible{ outline:3px solid var(--felt); outline-offset:2px; }
+  .cell:active{ transform:scale(0.93); }
+  .cell:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
 
   .cell.free{
-    background:var(--coral);
-    color:var(--ivory);
-    font-size:0.85rem;
-    letter-spacing:0.5px;
+    background:linear-gradient(160deg, var(--ember), #8C3521);
+    color:var(--cream);
+    font-family:'Manrope', sans-serif;
+    font-weight:700;
+    font-size:0.78rem;
+    letter-spacing:0.04em;
     cursor:default;
+    border-color:transparent;
   }
 
   .cell.marked:not(.free){
-    background:var(--gold);
-    color:var(--ink);
+    background:linear-gradient(160deg, var(--gold-bright), var(--gold));
+    color:#241a0a;
+    border-color:transparent;
   }
 
   .cell.marked:not(.free)::after{
     content:"";
     position:absolute;
-    width:70%;
-    height:70%;
+    width:62%;
+    height:62%;
     border-radius:50%;
-    background:rgba(28,43,34,0.18);
+    background:rgba(36,26,10,0.16);
   }
 
   .win-banner{
     position:absolute;
     inset:0;
-    background:rgba(14,42,30,0.92);
+    background:rgba(12,16,19,0.94);
     border-radius:18px;
     display:none;
     flex-direction:column;
@@ -228,20 +242,21 @@
   .win-banner.show{ display:flex; }
 
   .win-banner h2{
-    font-family:'Fredoka', sans-serif;
-    font-size:2.2rem;
-    color:var(--gold);
+    font-family:'Fraunces', serif;
+    font-weight:700;
+    font-size:2.1rem;
+    color:var(--gold-bright);
     margin:0;
   }
   .win-banner p{
-    color:var(--ivory-dim);
+    color:var(--muted);
     margin:0;
     font-size:0.9rem;
   }
   .win-banner button{
     margin-top:8px;
-    background:var(--gold);
-    color:var(--ink);
+    background:linear-gradient(180deg, var(--gold-bright), var(--gold));
+    color:#241a0a;
   }
 
   .sr-only{
@@ -265,7 +280,7 @@
     <div class="ball" id="ball">–</div>
     <div class="caller-controls">
       <button class="btn-call" id="callBtn">Call a number</button>
-      <span id="poolStatus" style="font-size:0.78rem; color:var(--ivory-dim); text-align:center;">50 numbers left</span>
+      <span id="poolStatus" style="font-size:0.78rem; color:var(--muted);">50 numbers left</span>
     </div>
   </div>
 
